@@ -2,8 +2,13 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <title>ReVil Bio — Ash Over Entire Page</title>
+    
+    <!-- Иконки FontAwesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
     <style>
+        /* ===== Global Styles ===== */
         body {
             background-color: #1a0f00;
             color: #ff6600;
@@ -15,8 +20,48 @@
             margin: 0;
             padding: 20px;
             perspective: 1000px;
+            position: relative; /* чтобы z-index у .ash-global мог быть позади/впереди */
         }
 
+        /* ===== Контейнер для пепла на всю страницу ===== */
+        .ash-global {
+            position: fixed; /* фиксировано ко всему окну */
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none; /* чтобы не мешать кликам по странице */
+            z-index: 0;          /* меняйте, если хотите над/под содержимым */
+            overflow: hidden;    /* частицы не будут «вылезать» за экран */
+        }
+
+        /* ===== Стили для каждой частицы пепла ===== */
+        .ash {
+            position: absolute;
+            bottom: 0;
+            background: #ff6600;
+            border-radius: 50%;
+            opacity: 0;
+            animation-name: floatUp;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            80% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-120vh);
+                opacity: 0;
+            }
+        }
+
+        /* ===== Основной блок ===== */
         .bio-container {
             width: 45%;
             padding: 40px;
@@ -28,8 +73,10 @@
             position: relative;
             overflow: hidden;
             backdrop-filter: blur(10px);
+            z-index: 1; /* чтобы блок был выше пепла, если .ash-global имеет z-index: 0 */
         }
 
+        /* ===== Border Glow ===== */
         .border-glow {
             position: absolute;
             top: -2px;
@@ -44,6 +91,7 @@
             transition: all 0.3s ease;
         }
 
+        /* ===== Glow Effect (за курсором) ===== */
         .glow-effect {
             position: absolute;
             width: 150px;
@@ -51,9 +99,10 @@
             background: radial-gradient(circle, rgba(255,102,0,0.2) 0%, rgba(255,102,0,0) 70%);
             transform: translate(-50%, -50%);
             pointer-events: none;
-            z-index: 1;
+            z-index: 2;
         }
 
+        /* ===== Profile Image ===== */
         .profile-image {
             width: 150px;
             height: 150px;
@@ -65,17 +114,16 @@
             overflow: hidden;
             transition: transform 0.3s ease;
         }
-
         .profile-image:hover {
             transform: scale(1.1);
         }
-
         .profile-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
+        /* ===== Title & Role ===== */
         h1 {
             text-align: center;
             font-size: 3.5em;
@@ -99,6 +147,7 @@
             z-index: 2;
         }
 
+        /* ===== Skills ===== */
         .skill-tags {
             display: flex;
             flex-wrap: wrap;
@@ -108,7 +157,6 @@
             position: relative;
             z-index: 2;
         }
-
         .skill-tag {
             background: rgba(255, 102, 0, 0.1);
             padding: 8px 15px;
@@ -123,12 +171,12 @@
             transition: all 0.3s ease;
             cursor: pointer;
         }
-
         .skill-tag:hover {
             background: rgba(255, 102, 0, 0.2);
             transform: translateY(-3px);
         }
 
+        /* ===== Social Links ===== */
         .social-links {
             display: flex;
             justify-content: center;
@@ -138,7 +186,6 @@
             z-index: 2;
             flex-wrap: wrap;
         }
-
         .social-link {
             font-size: 1.2em;
             color: #ff6600;
@@ -154,33 +201,33 @@
             gap: 10px;
             border-radius: 15px;
         }
-
         .social-link:hover {
             transform: translateY(-5px) scale(1.05);
             box-shadow: 0 5px 15px rgba(255, 102, 0, 0.3);
         }
 
+        /* ===== Animations ===== */
         @keyframes titlePulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+            0%   { transform: scale(1); }
+            50%  { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
 
         @keyframes borderPulse {
             from { border-color: #ff6600; }
-            to { border-color: transparent; }
+            to   { border-color: transparent; }
         }
 
+        /* ===== Responsive ===== */
         @media (max-width: 600px) {
             .bio-container {
+                width: 90%;
                 padding: 20px;
             }
-
             .social-links {
                 flex-direction: column;
                 align-items: stretch;
             }
-
             .social-link {
                 justify-content: center;
             }
@@ -188,18 +235,31 @@
     </style>
 </head>
 <body>
+
+    <!-- Контейнер пепла на всю страницу -->
+    <div class="ash-global"></div>
+
+    <!-- Ваш основной блок -->
     <div class="bio-container">
+
+        <!-- Свечение по краям -->
         <div class="border-glow"></div>
-        <div class="glow-effect"></div>
         
+        <!-- Аура под курсором -->
+        <div class="glow-effect"></div>
+
+        <!-- Профильная картинка -->
         <div class="profile-image">
             <img src="https://tinypic.host/images/2025/01/12/2025-01-12-18.30.16.jpg" alt="Profile Image">
         </div>
-        
-        <h1>ReVil</h1>
-        <div class="role">BackEnd developer from Haifa, Israel</div>
-    
 
+        <!-- Заголовок -->
+        <h1>ReVil</h1>
+        
+        <!-- Краткое описание / роль -->
+        <div class="role">BackEnd developer from Haifa, Israel</div>
+
+        <!-- Теги навыков -->
         <div class="skill-tags">
             <span class="skill-tag">Python</span>
             <span class="skill-tag">Full Stack</span>
@@ -207,16 +267,17 @@
             <span class="skill-tag">SQL</span>
         </div>
 
+
         <div class="social-links">
-            <a href="https://t.me/ReVil" class="social-link" target="_blank">
+            <a href="https://t.me/TheRevil" class="social-link" target="_blank">
                 <i class="fab fa-telegram"></i>
                 <span>Telegram</span>
             </a>
-            <a href="https://tiktok.com/@ReVil" class="social-link" target="_blank">
+            <a href="https://tiktok.com/@None" class="social-link" target="_blank">
                 <i class="fab fa-tiktok"></i>
                 <span>TikTok</span>
             </a>
-            <a href="https://github.com/ReVil" class="social-link" target="_blank">
+            <a href="https://github.com/TheZxcRevil" class="social-link" target="_blank">
                 <i class="fab fa-github"></i>
                 <span>GitHub</span>
             </a>
@@ -224,16 +285,48 @@
     </div>
 
     <script>
-        document.querySelector('.bio-container').addEventListener('mousemove', (e) => {
-            const container = e.currentTarget;
+        // ===== Генерация «пепла» (Ash Effect) на всю страницу =====
+        const ashCount = 50; // больше пепла
+        const ashGlobalContainer = document.querySelector('.ash-global');
+
+        for (let i = 0; i < ashCount; i++) {
+            const ash = document.createElement('div');
+            ash.classList.add('ash');
+
+            // Случайный размер (2..5 px)
+            const size = Math.random() * 3 + 2;
+            ash.style.width = size + 'px';
+            ash.style.height = size + 'px';
+
+            // Случайная горизонтальная позиция (0..100%)
+            const leftPos = Math.random() * 100;
+            ash.style.left = leftPos + '%';
+
+            // Случайная длительность анимации (3..6 сек)
+            const duration = Math.random() * 3 + 3;
+            ash.style.animationDuration = duration + 's';
+
+            // Случайная задержка (0..2 сек)
+            const delay = Math.random() * 2;
+            ash.style.animationDelay = delay + 's';
+
+            ashGlobalContainer.appendChild(ash);
+        }
+
+        // ===== Эффект 3D-tilt при движении мышкой на .bio-container =====
+        const container = document.querySelector('.bio-container');
+        
+        container.addEventListener('mousemove', (e) => {
             const rect = container.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
-            
+
+            // Позиционируем glow-effect под курсором
             const glowEffect = document.querySelector('.glow-effect');
             glowEffect.style.left = x + 'px';
             glowEffect.style.top = y + 'px';
-            
+
+            // Меняем градиент обводки
             const borderGlow = document.querySelector('.border-glow');
             borderGlow.style.borderImage = `radial-gradient(
                 circle at ${x}px ${y}px,
@@ -241,10 +334,11 @@
                 #ff6600 50%,
                 rgba(255, 102, 0, 0.3) 100%
             ) 2`;
-            
+
+            // Рассчитываем угол наклона
             const rotateX = (y / rect.height - 0.5) * 10;
             const rotateY = (x / rect.width - 0.5) * 10;
-            
+
             container.style.transform = `
                 rotateX(${-rotateX}deg)
                 rotateY(${rotateY}deg)
@@ -252,17 +346,15 @@
             `;
         });
 
-        document.querySelector('.bio-container').addEventListener('mouseleave', () => {
-            const container = document.querySelector('.bio-container');
+        container.addEventListener('mouseleave', () => {
             container.style.transform = 'none';
         });
 
-        // Добавляем анимацию для skill tags
+        // ===== Эффект при наведении на теги навыков =====
         document.querySelectorAll('.skill-tag').forEach(tag => {
             tag.addEventListener('mouseover', () => {
                 tag.style.transform = 'scale(1.1) translateY(-5px)';
             });
-
             tag.addEventListener('mouseout', () => {
                 tag.style.transform = 'none';
             });
